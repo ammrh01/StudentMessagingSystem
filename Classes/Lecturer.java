@@ -1,6 +1,5 @@
-import java.util.Date;
 
-public class Lecturer extends Person{
+public class Lecturer extends Person {
     private int lecturerId;
     private String departmentName;
     private String coursesTaught;
