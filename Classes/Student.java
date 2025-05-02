@@ -7,41 +7,57 @@ public class Student extends Person {
 
     public Student() {};
 
-    public Student(int academicYear, String majorCourse, int matricNumber, String Username, boolean status, String userEmail, int userId, String userRole) {
-        super(Username, status, userEmail, userId, userRole);
+    public Student(int academicYear, String majorCourse, int matricNumber, String Username, boolean active, String userEmail, int userId, String userRole) {
+        super(Username, active, userEmail, userId, userRole);
         this.academicYear = academicYear;
         this.majorCourse = majorCourse;
         this.matricNumber = matricNumber;
     }
 
     @Override
-    void openChat(int chatId) {
-        // TODO Auto-generated method stub
-        
+    void openChat(String chatName) {
+
     }
 
     @Override
     void reportUser(int userId) {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
-    void sendMessage(int userId, String content, Date timestamp) {
-        // TODO Auto-generated method stub
-        
+    void sendMessage(Person recipient, String content) {
+             Chat chat  = null;
+
+            for (Chat c : chats) {
+              if (c.getParticipant(recipient)) {
+                chat = c;
+                break;
+              }
+            }
+
+            if (chat == null) {
+                System.out.println("Chat not found. Creating new chat....");
+                // Create a new chat
+                chat = new Chat(recipient.getUsername());
+                chat.addParticipant(this);
+                chat.addParticipant(recipient);
+                chats.add(chat);
+                recipient.chats.add(chat);
+            }
+                // Add the message
+              Message message = new Message(this, content);
+              chat.addMessage(message);
+
+              System.out.println("Message sent to " + recipient.getUsername() + ": " + content);
     }
 
     @Override
-    void viewChats() {
-        // TODO Auto-generated method stub
-        
+    public void viewChats() {
     }
 
     @Override
-    void viewMessage(int chatId, int userId) {
-        // TODO Auto-generated method stub
-        
+    void viewMessage() {
+
     }
 
     @Override
@@ -63,6 +79,14 @@ public class Student extends Person {
 
     public int getAcademicYear() {
         return academicYear;
+    }
+
+    public void joinChatroom(int chatroomId) {
+
+    }
+
+    public void leaveChatroom(int chatroomId) {
+        
     }
     
     

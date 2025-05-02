@@ -1,25 +1,30 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Person {
     private int userId;
     private String Username;
     private String userEmail;
     protected String userRole;
-    private boolean status;
+    private boolean active;
+    protected List<Chat> chats = new ArrayList<>();
 
-    public Person() {
+
+    Person() {
     }
 
-    public Person(String Username, boolean status, String userEmail, int userId, String userRole) {
+    Person(String Username, boolean active, String userEmail, int userId, String userRole) {
         this.Username = Username;
-        this.status = status;
+        this.active = active;
         this.userEmail = userEmail;
         this.userId = userId;
         this.userRole = userRole;
     }
 
-    abstract void sendMessage(int userId, String content, java.util.Date timestamp);
-    abstract void viewMessage(int chatId, int userId);
+    abstract void sendMessage(Person recipient, String content);
+    abstract void viewMessage();
     abstract void viewChats();
-    abstract void openChat(int chatId);
+    abstract void openChat(String chatName);
     abstract void viewProfile();
     abstract void reportUser(int userId);
 
@@ -39,8 +44,8 @@ public abstract class Person {
         return userRole;
     }
 
-    public boolean isStatus() {
-        return status;
+    public boolean isActive() {
+        return active;
     }
 
     public void setUserId(int userId) {
@@ -59,8 +64,8 @@ public abstract class Person {
         this.userRole = userRole;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setStatus(boolean active) {
+        this.active = active;
     }
 }
 

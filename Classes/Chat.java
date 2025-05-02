@@ -1,61 +1,50 @@
 import java.util.ArrayList;
+import java.util.List;
+
+
 public class Chat {
     private int chatId;
     private String chatName;
-    private ArrayList<String> messageList;
-    private int[] participants;
-    private String email;
+    private List<Person> participants = new ArrayList<>();
+    private List<Message> messageList = new ArrayList<>();
      
         
     public Chat(){
     }
-    public Chat(int chatId,String chatName,ArrayList<String> messageList,int[] participants,String email){
-        this.chatId=chatId;
+
+    public Chat(String chatName){
+        java.util.Random random = new java.util.Random();
+        int randomId = random.nextInt(900) + 100; // (0–899) + 100 = 100–999
+        
+        this.chatId=randomId;
         this.chatName=chatName;
-        this.messageList=messageList;
-        this.participants=participants;
-        this.email=email;
     }
-public void addMessage(String message){
 
-}
-public void getMessages(){
+    public void addMessage(Message content){
+        messageList.add(content);
+    }
 
-}
-public void getParticipants(){
-
-}
+    public void getMessages(){
     
-    
-public int getchatId(){
-return chatId;
-}
 
-public String getchatName(){
-return chatName;
-}
-public ArrayList<String> getmessageList(){
-return messageList;
-}
-public int[] getparticipants(){
-return participants;
-}
-public String getemail(){
-return email;
-}
-public int setchatId(int chatId){
-return this.chatId=chatId;
-}
-public String setchatName(String chatName){
-return this.chatName=chatName;
-}
-public ArrayList<String> setmessageList(ArrayList<String> messageList){
-return this.messageList=messageList;
-}
-public int[] setparticipants(int[] participants){
-return this.participants=participants;
-}
-public String setemail(String email){
-return this.email=email;
-}
+    }
+
+    public boolean getParticipant(Person p){
+        return participants.contains(p);
+
+    }
+
+    public void addParticipant(Person p){
+        if (!participants.contains(p)) {
+            participants.add(p);
+        }
+    }
+
+    public int getChatId() {
+        return chatId;
+    }
+
+    public String getChatName() {
+        return chatName;
+    }
 }

@@ -34,33 +34,49 @@ public class Lecturer extends Person{
     }
 
     @Override
-    void openChat(int chatId) {
-        // TODO Auto-generated method stub
-        
+    void openChat(String chatName) {
+
     }
 
     @Override
     void reportUser(int userId) {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
-    void sendMessage(int userId, String content, Date timestamp) {
-        // TODO Auto-generated method stub
-        
+    void sendMessage(Person recipient, String content) {
+             Chat chat  = null;
+
+            for (Chat c : chats) {
+              if (c.getParticipant(recipient)) {
+                chat = c;
+                break;
+              }
+            }
+
+            if (chat == null) {
+                System.out.println("Chat not found. Creating new chat....");
+                // Create a new chat
+                chat = new Chat(recipient.getUsername());
+                chat.addParticipant(this);
+                chat.addParticipant(recipient);
+                chats.add(chat);
+                recipient.chats.add(chat);
+            }
+                // Add the message
+              Message message = new Message(this, content);
+              chat.addMessage(message);
+
+              System.out.println("Message sent to " + recipient.getUsername() + ": " + content);
     }
 
     @Override
-    void viewChats() {
-        // TODO Auto-generated method stub
-        
+    public void viewChats() {
     }
 
     @Override
-    void viewMessage(int chatId, int userId) {
-        // TODO Auto-generated method stub
-        
+    void viewMessage() {
+
     }
 
     @Override
@@ -72,7 +88,21 @@ public class Lecturer extends Person{
         System.out.println("Office location: " + this.getOfficeLocation());
     }
 
-    
+    public void addChatroom(int chatroomId) {
+
+    }
+
+    public void removeChatroom(int chatroomId) {
+
+    }
+
+    public void addStudent(int studentId, int chatroomId) {
+
+    }
+
+    public void removeStudent(int studentId, int chatroomId) {
+        
+    }
 
 
 
