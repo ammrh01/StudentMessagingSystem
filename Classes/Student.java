@@ -1,4 +1,3 @@
-import java.util.Date;
 
 public class Student extends Person {
     private int matricNumber;
@@ -16,6 +15,11 @@ public class Student extends Person {
 
     @Override
     void openChat(String chatName) {
+        for (Chat c : chats) {
+            if (c.getChatName().equals(chatName)) {
+                System.out.printf("\nChat with %s opened.", c.getChatName());
+            }
+        }
 
     }
 
@@ -53,6 +57,14 @@ public class Student extends Person {
 
     @Override
     public void viewChats() {
+        System.out.println("---Chats---");
+        for (Chat c : chats) {
+            if (c.getParticipant(this)) {
+                System.out.println(c.getChatName());
+            }
+        }
+        System.out.println("-----------");
+        
     }
 
     @Override

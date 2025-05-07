@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Person {
+
     private int userId;
     private String Username;
     private String userEmail;
@@ -9,8 +10,11 @@ public abstract class Person {
     private boolean active;
     protected List<Chat> chats = new ArrayList<>();
 
+    private static int objectnum = 0;
+
 
     Person() {
+        objectnum++;
     }
 
     Person(String Username, boolean active, String userEmail, int userId, String userRole) {
@@ -19,6 +23,8 @@ public abstract class Person {
         this.userEmail = userEmail;
         this.userId = userId;
         this.userRole = userRole;
+
+        objectnum++;
     }
 
     abstract void sendMessage(Person recipient, String content);
@@ -66,6 +72,10 @@ public abstract class Person {
 
     public void setStatus(boolean active) {
         this.active = active;
+    }
+
+    public static int getNumberOfObjects() {
+        return objectnum;
     }
 }
 
