@@ -57,6 +57,8 @@ public class simpleInterface extends Application {
 
         Label contact = new Label();
 
+        Button viewprofile = new Button("View profile");
+
         ScrollPane scrollPane1 = new ScrollPane(chatbox);
         scrollPane1.setFitToWidth(true);
         scrollPane1.setPrefHeight(480);
@@ -77,7 +79,7 @@ public class simpleInterface extends Application {
             }
         });
 
-        VBox layout1 = new VBox(10, contact, scrollPane1, textField, button, shiftMessage);
+        VBox layout1 = new VBox(10, contact, viewprofile, scrollPane1, textField, button, shiftMessage);
         layout1.setAlignment(Pos.CENTER);
         layout1.setPadding(new Insets(10));
 
@@ -105,16 +107,19 @@ public class simpleInterface extends Application {
                     primaryStage.setScene(scene2);
                     username.clear();
 
+                    Person currentUser = studentlist[i];
+
 
                     // List down all available contacts
                     for (int j = 0; j < studentlist.length; j++ ) {
-                        for (Chat chat : studentlist[j].chats) {
-                            if (chat.hasParticipants(studentlist[i], studentlist[j])) {
-                                if (studentlist[j].getUsername() != studentlist[i].getUsername()) {
-                                System.out.println(studentlist[j].getUsername());
-                                Button buttonContact = new Button(studentlist[j].getUsername());
+                        for (Chat chat : studentlist[j].getChats()) {
+                            Person targetContact = studentlist[j];
+                            if (chat.hasParticipants(currentUser, targetContact)) {
+                                if (targetContact.getUsername() != currentUser.getUsername()) {
+                                System.out.println(targetContact.getUsername());
+                                Button buttonContact = new Button(targetContact.getUsername());
                                 contactslayout.getChildren().add(buttonContact);
-                                    Controller handleMessage = new Controller(chatbox, textField, scrollPane1, chatList, studentlist[i], studentlist[j], contact, buttonContact, currentProfile.getText());
+                                    Controller handleMessage = new Controller(chatbox, textField, scrollPane1, chatList, currentUser, targetContact, contact, buttonContact);
                                     buttonContact.setOnAction(handleMessage::openChat);
                                     button.setOnAction(handleMessage::handleSend);
                                 }

@@ -29,7 +29,7 @@ public abstract class Person {
         objectnum++;
     }
 
-    abstract void sendMessage(Person recipient, String content);
+    abstract Chat sendMessage(Person recipient, String content);
     abstract void viewChats();
     abstract void openChat(String chatName);
     abstract void viewProfile();

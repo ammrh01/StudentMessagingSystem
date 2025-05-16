@@ -27,7 +27,7 @@ public class Student extends Person {
     }
 
     @Override
-    void sendMessage(Person recipient, String content) {
+    Chat sendMessage(Person recipient, String content) {
             Chat chat  = null;
 
             for (Chat c : chats) {
@@ -51,6 +51,8 @@ public class Student extends Person {
               chat.addMessage(message);
 
               System.out.println("Message sent to " + recipient.getUsername() + ": " + content);
+
+              return chat;
     }
 
     @Override

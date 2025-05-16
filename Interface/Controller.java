@@ -21,7 +21,7 @@ public class Controller {
     private Button buttonContact;
     private Person sender;
     private Person receiver;
-    private Student[] studentlist = null;
+    private Chat currentChat;
 
     private String currentProfile;
 
@@ -29,7 +29,7 @@ public class Controller {
 
     }
 
-    public Controller(VBox chatBox, TextField inputField, ScrollPane scrollPane, Chat[] chatList, Person sender, Person receiver, Label contact, Button buttoncontact, String currentProfile) {
+    public Controller(VBox chatBox, TextField inputField, ScrollPane scrollPane, Chat[] chatList, Person sender, Person receiver, Label contact, Button buttoncontact) {
         this.chatBox = chatBox;
         this.inputField = inputField;
         this.scrollPane = scrollPane;
@@ -41,10 +41,8 @@ public class Controller {
         this.currentProfile = currentProfile;
     }
 
-
-
-    public void handleSend(ActionEvent event) {
-        String message = currentProfile + "\n" + inputField.getText().trim();
+    public void createChat(String content) {
+        String message = sender.getUsername() + "\n" + content;
         if (!(currentContact.getText().isEmpty())) {
             if (!(inputField.getText().isEmpty())) {
                 Label chatMessage = new Label(message);
@@ -59,16 +57,18 @@ public class Controller {
                 scrollPane.layout();
                 scrollPane.setVvalue(1.0);
 
-                    for (Chat chat : chatlist) {
-                       if (chat.hasParticipants(sender, receiver)) {
-                           chat.addMessage(new Message(sender, inputField.getText().trim()));
-                           System.out.println("Message added!");
-                       }
-                    }
-
                 chatBox.getChildren().add(chatWindow);
                 inputField.clear();
 
+            }
+        }
+    }
+
+    public void handleSend(ActionEvent event) {
+        if (!(currentContact.getText().isEmpty())) {
+            if (!(inputField.getText().isEmpty())) {
+                Chat targetChat = sender.sendMessage(receiver, inputField.getText());
+                createChat(inputField.getText());
             }
         }
     }
