@@ -36,46 +36,50 @@ public class Lecturer extends Person {
     }
 
     @Override
-    void openChat(String chatName) {
+    Chat openChat(Person target) {
+        Chat chat = null;
+        for (Chat chats : target.getChats()) {
+            if (chats.hasParticipants(this, target)) {
+                chat = chats;
+                return chat;
+            }
+        }
+        return chat;
 
     }
 
     @Override
     void reportUser(int userId) {
-        
+
     }
 
     @Override
     Chat sendMessage(Person recipient, String content) {
-             Chat chat  = null;
+        Chat chat  = null;
 
-            for (Chat c : chats) {
-             // if (c.getParticipant(recipient)) {
+        for (Chat c : chats) {
+            if (c.hasParticipants(this, recipient)) {
                 chat = c;
                 break;
-           //   }
             }
+        }
 
-            if (chat == null) {
-                System.out.println("Chat not found. Creating new chat....");
-                // Create a new chat
-                chat = new Chat();
-                chat.addParticipant(this);
-                chat.addParticipant(recipient);
-                chats.add(chat);
-                recipient.chats.add(chat);
-            }
-                // Add the message
-              Message message = new Message(recipient, content);
-              chat.addMessage(message);
+        if (chat == null) {
+            System.out.println("Chat not found. Creating new chat....");
+            // Create a new chat
+            chat = new Chat();
+            chat.addParticipant(this);
+            chat.addParticipant(recipient);
+            chats.add(chat);
+            recipient.chats.add(chat);
+        }
+        // Add the message
+        Message message = new Message(this, content);
+        chat.addMessage(message);
 
-              System.out.println("Message sent to " + recipient.getUsername() + ": " + content);
+        System.out.println("Message sent to " + recipient.getUsername() + ": " + content);
 
-              return chat;
-    }
-
-    @Override
-    public void viewChats() {
+        return chat;
     }
 
     @Override

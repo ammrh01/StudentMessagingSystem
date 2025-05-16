@@ -17,7 +17,15 @@ public class Student extends Person {
     }
 
     @Override
-    void openChat(String chatName) {
+    Chat openChat(Person target) {
+        Chat chat = null;
+        for (Chat chats : target.getChats()) {
+            if (chats.hasParticipants(this, target)) {
+                chat = chats;
+                return chat;
+            }
+        }
+        return chat;
 
     }
 
@@ -47,24 +55,12 @@ public class Student extends Person {
                 recipient.chats.add(chat);
             }
                 // Add the message
-              Message message = new Message(recipient, content);
+              Message message = new Message(this, content);
               chat.addMessage(message);
 
               System.out.println("Message sent to " + recipient.getUsername() + ": " + content);
 
               return chat;
-    }
-
-    @Override
-    public void viewChats() {
-        System.out.println("---Chats---");
-        for (Chat c : chats) {
-           // if (c.getParticipant(this)) {
-                System.out.println(c.getChatName());
-          //  }
-        }
-        System.out.println("-----------");
-        
     }
 
     @Override

@@ -10,18 +10,18 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import java.util.List;
+import javafx.scene.text.TextAlignment;
 
 public class Controller {
 
     private VBox chatBox;
     private TextField inputField;
     private ScrollPane scrollPane;
-    private Chat[] chatlist = null;
-    private Label currentContact;
-    private Button buttonContact;
+    private Chat currentChat = null;
+    private Label contactLabel;
+    private Button sendButton;
     private Person sender;
     private Person receiver;
-    private Chat currentChat;
 
     private String currentProfile;
 
@@ -29,29 +29,32 @@ public class Controller {
 
     }
 
-    public Controller(VBox chatBox, TextField inputField, ScrollPane scrollPane, Chat[] chatList, Person sender, Person receiver, Label contact, Button buttoncontact) {
+    public Controller(VBox chatBox, TextField inputField, ScrollPane chatboxWindow, Chat currentChat, Person sender, Person receiver, Label contactLabel, Button sendButton) {
         this.chatBox = chatBox;
         this.inputField = inputField;
-        this.scrollPane = scrollPane;
-        this.chatlist = chatList;
+        this.scrollPane = chatboxWindow;
+        this.currentChat = currentChat;
         this.sender = sender;
         this.receiver = receiver;
-        this.currentContact = contact;
-        this.buttonContact = buttoncontact;
-        this.currentProfile = currentProfile;
+        this.contactLabel = contactLabel;
+        this.sendButton = sendButton;
     }
 
-    public void createChat(String content) {
-        String message = sender.getUsername() + "\n" + content;
-        if (!(currentContact.getText().isEmpty())) {
-            if (!(inputField.getText().isEmpty())) {
+    public void createChat(String user, String content) {
+        String message = user + "\n" + content;
                 Label chatMessage = new Label(message);
-                chatMessage.setAlignment(Pos.TOP_RIGHT);
                 chatMessage.setWrapText(true);
 
                 VBox chatWindow = new VBox(chatMessage);
-                chatWindow.setAlignment(Pos.TOP_LEFT);
                 chatWindow.setPadding(new Insets(5));
+
+                if (user.equals(this.sender.getUsername())) {
+                    chatWindow.setAlignment(Pos.TOP_RIGHT);
+                    chatMessage.setTextAlignment(TextAlignment.RIGHT);
+                } else {
+                    chatWindow.setAlignment(Pos.TOP_LEFT);
+                    chatMessage.setTextAlignment(TextAlignment.LEFT);
+                }
 
                 // Scroll to the bottom
                 scrollPane.layout();
@@ -59,43 +62,30 @@ public class Controller {
 
                 chatBox.getChildren().add(chatWindow);
                 inputField.clear();
-
-            }
-        }
     }
 
     public void handleSend(ActionEvent event) {
-        if (!(currentContact.getText().isEmpty())) {
+        Person receiver = sender.getViewingContact();
+
+        if (!(contactLabel.getText().isEmpty())) {
             if (!(inputField.getText().isEmpty())) {
-                Chat targetChat = sender.sendMessage(receiver, inputField.getText());
-                createChat(inputField.getText());
+                currentChat = sender.sendMessage(receiver, inputField.getText());
+                createChat(sender.getUsername(), inputField.getText());
             }
         }
     }
 
     public void openChat(ActionEvent event) {
+        System.out.println("Chat opened!");
         chatBox.getChildren().clear();
-        currentContact.setText(buttonContact.getText());
+        contactLabel.setText(receiver.getUsername());
+        Chat currentChat = sender.openChat(receiver);
+        sender.setViewingContact(receiver);
 
-        for (Chat chat : chatlist) {
-            if (chat.hasParticipants(sender, receiver)) {
-                for (Message message : chat.getMessages()) {
-                    Label chatMessage = new Label(message.getSender().getUsername() + "\n" + message.getContent());
-                    chatMessage.setAlignment(Pos.TOP_RIGHT);
-                    chatMessage.setWrapText(true);
-
-                    VBox chatWindow = new VBox(chatMessage);
-                    chatWindow.setAlignment(Pos.TOP_LEFT);
-                    chatWindow.setPadding(new Insets(5));
-
-                    chatBox.getChildren().add(chatWindow);
-                    inputField.clear();
-
-                    // Scroll to the bottom
-                    scrollPane.layout();
-                    scrollPane.setVvalue(1.0);
-                }
-            }
+        for (Message message : currentChat.getMessages()) {
+            createChat(message.getSender().getUsername(), message.getContent());
         }
+
+
     }
 }

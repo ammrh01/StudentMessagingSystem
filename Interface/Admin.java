@@ -1,3 +1,5 @@
+package com.myjfx.simplefx;
+
 public class Admin {
     private int adminId;
     private String username;

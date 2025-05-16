@@ -8,39 +8,45 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+import javafx.scene.paint.Color;
+import java.util.List;
+import javafx.scene.shape.Rectangle;
+
 public class simpleInterface extends Application {
     public void start(Stage primaryStage) throws Exception {
-        Person[] studentlist = new Person[3];
+        Person[] accountList = new Person[3];
 
-        studentlist[0] = new Student(1, "KICT", 240000, "Bob", true, "bob@gmail.com", 001, "Student");
-        studentlist[1] = new Student(1, "KICT", 240000, "Alice", true, "alice@gmail.com", 002, "Student");
-        studentlist[2] = new Student(1, "KICT", 240000, "Michael", true, "michael@gmail.com", 003, "Student");
+        accountList[0] = new Student(1, "KICT", 240000, "Bob", true, "bob@gmail.com", 001, "Student");
+        accountList[1] = new Student(1, "KICT", 240000, "Alice", true, "alice@gmail.com", 002, "Student");
+        accountList[2] = new Student(1, "KICT", 240000, "Michael", true, "michael@gmail.com", 003, "Student");
 
         Chat[] chatList = new Chat[2];
         //Between bob and alice
         chatList[0] = new Chat();
-        chatList[0].addParticipant(studentlist[0]);
-        chatList[0].addParticipant(studentlist[1]);
-        studentlist[1].getChats().add(chatList[0]);
-        studentlist[0].getChats().add(chatList[0]);
+        chatList[0].addParticipant(accountList[0]);
+        chatList[0].addParticipant(accountList[1]);
+        accountList[1].getChats().add(chatList[0]);
+        accountList[0].getChats().add(chatList[0]);
 
         //Between Alice and Michael
         chatList[1] = new Chat();
-        chatList[1].addParticipant(studentlist[1]);
-        chatList[1].addParticipant(studentlist[2]);
-        studentlist[1].getChats().add(chatList[1]);
-        studentlist[2].getChats().add(chatList[1]);
+        chatList[1].addParticipant(accountList[1]);
+        chatList[1].addParticipant(accountList[2]);
+        accountList[1].getChats().add(chatList[1]);
+        accountList[2].getChats().add(chatList[1]);
 
 
 
         // Login page
         TextField username = new TextField();
         username.setPromptText("Username");
+        username.setMaxWidth(200);
 
         Button login = new Button("Login");
 
@@ -53,82 +59,74 @@ public class simpleInterface extends Application {
         // Message page
         VBox chatbox = new VBox(10);
         chatbox.setPadding(new Insets(10));
-        chatbox.setAlignment(Pos.TOP_LEFT);
 
         Label contact = new Label();
 
-        Button viewprofile = new Button("View profile");
+        ScrollPane chatboxWindow = new ScrollPane(chatbox);
+        chatboxWindow.setFitToWidth(true);
+        chatboxWindow.setPrefHeight(480);
 
-        ScrollPane scrollPane1 = new ScrollPane(chatbox);
-        scrollPane1.setFitToWidth(true);
-        scrollPane1.setPrefHeight(480);
+        TextField messageField = new TextField();
+        messageField.setPromptText("Type a message...");
 
-        TextField textField = new TextField();
-        textField.setPromptText("Type a message...");
+        Button sendButton = new Button("Send Message");
 
-        Button button = new Button("Send Message");
+        HBox messageBox = new HBox(10, messageField, sendButton);
+        messageBox.setPadding(new Insets(10));
+        messageBox.setAlignment(Pos.CENTER);
+
+        VBox chatLayout = new VBox(10, contact, chatboxWindow, messageBox);
+        chatLayout.setAlignment(Pos.TOP_CENTER);
+        chatLayout.setPadding(new Insets(10));
+        chatLayout.setMaxHeight(400);
+
         Text currentProfile = new Text();
-        Button shiftMessage = new Button("Sender");
         Button logOut = new Button("Log out");
 
-        shiftMessage.setOnAction(e -> {
-            if (shiftMessage.getText().equals("Sender")) {
-                shiftMessage.setText("Receiver");
-            } else if (shiftMessage.getText().equals("Receiver")) {
-                shiftMessage.setText("Sender");
-            }
-        });
+        HBox profileLayout = new HBox(10, currentProfile, logOut);
+        profileLayout.setPadding(new Insets(10));
+        profileLayout.setAlignment(Pos.TOP_RIGHT);
 
-        VBox layout1 = new VBox(10, contact, viewprofile, scrollPane1, textField, button, shiftMessage);
-        layout1.setAlignment(Pos.CENTER);
-        layout1.setPadding(new Insets(10));
-
-        // Profile name, and log out button
-        VBox layout2 = new VBox(10, layout1, currentProfile, logOut);
-        layout2.setAlignment(Pos.TOP_LEFT);
-        layout2.setPadding(new Insets(10));
-        //StackPane root = new StackPane(profileLayout);
+        profileLayout.setStyle("-fx-border-width: 0 0 1px 0; -fx-border-color: lightgrey;");
 
         //Contacts list
-        VBox contactslayout = new VBox(10);
-        contactslayout.setPadding(new Insets(10));
-        contactslayout.setAlignment(Pos.TOP_CENTER);
+        VBox contactsList = new VBox(10);
+        contactsList.setPadding(new Insets(10));
+        contactsList.setAlignment(Pos.TOP_CENTER);
+
+        contactsList.setStyle("-fx-border-width: 0 1px 0 0; -fx-border-color: lightgrey;");
+
 
         BorderPane bPane = new BorderPane();
-        bPane.setCenter(layout2);
-        bPane.setLeft(contactslayout);
+        bPane.setTop(profileLayout);
+        bPane.setCenter(chatLayout);
+        bPane.setLeft(contactsList);
 
         Scene scene2 = new Scene(bPane, 640, 480);
 
+
+
         login.setOnAction(e -> {
-            for (int i = 0; i < studentlist.length; i++) {
-                if (username.getText().equals(studentlist[i].getUsername())) {
+            for (int i = 0; i < accountList.length; i++) {
+                if (username.getText().equals(accountList[i].getUsername())) {
                     currentProfile.setText(username.getText());
                     primaryStage.setScene(scene2);
                     username.clear();
 
-                    Person currentUser = studentlist[i];
+                    Person currentUser = accountList[i];
 
-
-                    // List down all available contacts
-                    for (int j = 0; j < studentlist.length; j++ ) {
-                        for (Chat chat : studentlist[j].getChats()) {
-                            Person targetContact = studentlist[j];
-                            if (chat.hasParticipants(currentUser, targetContact)) {
-                                if (targetContact.getUsername() != currentUser.getUsername()) {
-                                System.out.println(targetContact.getUsername());
-                                Button buttonContact = new Button(targetContact.getUsername());
-                                contactslayout.getChildren().add(buttonContact);
-                                    Controller handleMessage = new Controller(chatbox, textField, scrollPane1, chatList, currentUser, targetContact, contact, buttonContact);
-                                    buttonContact.setOnAction(handleMessage::openChat);
-                                    button.setOnAction(handleMessage::handleSend);
-                                }
+                    for (Chat chat : currentUser.getChats()) {
+                        for (Person receivers : chat.getParticipants()) {
+                            if (!(receivers.getUsername().equals(currentUser.getUsername()))) {
+                                System.out.println(receivers.getUsername());
+                                Button buttonContact = new Button(receivers.getUsername());
+                                Controller handleMessage = new Controller(chatbox, messageField, chatboxWindow, chat, currentUser, receivers, contact, sendButton);
+                                buttonContact.setOnAction(handleMessage::openChat);
+                                sendButton.setOnAction(handleMessage::handleSend);
+                                contactsList.getChildren().add(buttonContact);
                             }
                         }
                     }
-
-
-
                 }
             }
         });
@@ -137,12 +135,12 @@ public class simpleInterface extends Application {
             currentProfile.setText("");
             primaryStage.setScene(scene1);
             chatbox.getChildren().clear();
-            contactslayout.getChildren().clear();
-            button.setOnAction(null);
+            contactsList.getChildren().clear();
+            sendButton.setOnAction(null);
         });
 
         primaryStage.setScene(scene1);
-        primaryStage.setTitle("Simple FX Interface");
+        primaryStage.setTitle("Student Messaging System for i-Ta'leem");
         primaryStage.show();
     }
 

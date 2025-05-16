@@ -27,7 +27,10 @@ public class Chat {
     public boolean hasParticipants(Person s1, Person s2){
         return (participants.contains(s1) && participants.contains(s2)) ||
                 (participants.contains(s2) && participants.contains(s1));
+    }
 
+    public List<Person> getParticipants() {
+        return participants;
     }
 
     public void addParticipant(Person p){
