@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -75,7 +76,18 @@ public class simpleInterface extends Application {
         messageBox.setPadding(new Insets(10));
         messageBox.setAlignment(Pos.CENTER);
 
-        VBox chatLayout = new VBox(10, contact, chatboxWindow, messageBox);
+        //profile punya button
+        Button profile = new Button("View Profile");
+
+        //gabung contact name dgn view profile punya button
+        HBox profileView = new HBox(10, contact, profile);
+        messageBox.setPadding(new Insets(10));
+        messageBox.setAlignment(Pos.CENTER);
+        //dh buat ni tp still tak center
+        StackPane profilePane = new StackPane(profileView);
+        profilePane.setAlignment(Pos.CENTER); // this centers the HBox
+
+        VBox chatLayout = new VBox(10, profilePane, chatboxWindow, messageBox);
         chatLayout.setAlignment(Pos.TOP_CENTER);
         chatLayout.setPadding(new Insets(10));
         chatLayout.setMaxHeight(400);
@@ -104,7 +116,36 @@ public class simpleInterface extends Application {
 
         Scene scene2 = new Scene(bPane, 640, 480);
 
+        profile.setOnAction(e -> {
+            String contactName = contact.getText();
+            for (Person person : accountList) {
+                if (person.getUsername().equals(contactName) && person instanceof Student) {
+                    Label nameLabel = new Label("Username: " + person.getUsername());
+                    Label emailLabel = new Label("Email: " + person.getUserEmail());
+                    Label roleLabel = new Label("Role: " + person.getUserRole());
 
+                    // If it's a student, cast and show additional fields
+                    VBox profileBox = new VBox(10, nameLabel, emailLabel, roleLabel);
+                    if (person instanceof Student) {
+                        Student student = (Student) person;
+                        Label matricLabel = new Label("Matric No: " + student.getMatricNumber());
+                        Label majorLabel = new Label("Major: " + student.getMajorCourse());
+                        Label yearLabel = new Label("Academic Year: " + student.getAcademicYear());
+                        profileBox.getChildren().addAll(matricLabel, majorLabel, yearLabel);
+                    }
+
+                    Button backButton = new Button("Back");
+                    backButton.setOnAction(f -> primaryStage.setScene(scene2)); // go back to main chat
+
+                    profileBox.getChildren().add(backButton);
+                    profileBox.setPadding(new Insets(20));
+                    profileBox.setAlignment(Pos.CENTER);
+
+                    Scene profileScene = new Scene(profileBox, 400, 300);
+                    primaryStage.setScene(profileScene);
+                }
+            }
+        });
 
         login.setOnAction(e -> {
             for (int i = 0; i < accountList.length; i++) {

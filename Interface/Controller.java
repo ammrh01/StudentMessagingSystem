@@ -3,14 +3,17 @@ package com.myjfx.simplefx;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import java.util.List;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 
 public class Controller {
 
@@ -22,8 +25,9 @@ public class Controller {
     private Button sendButton;
     private Person sender;
     private Person receiver;
-
-    private String currentProfile;
+    private Stage primaryStage;
+    private StackPane viewProfile;
+    private Scene scene2;
 
     public Controller() {
 
@@ -38,6 +42,14 @@ public class Controller {
         this.receiver = receiver;
         this.contactLabel = contactLabel;
         this.sendButton = sendButton;
+    }
+
+    public Controller(Stage primaryStage, Person receiver,  Scene scene2) {
+        this.primaryStage = primaryStage;
+        this.receiver = receiver;
+        this.viewProfile = viewProfile;
+        this.scene2 = scene2;
+
     }
 
     public void createChat(String user, String content) {
