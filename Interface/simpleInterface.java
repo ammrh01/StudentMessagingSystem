@@ -116,36 +116,7 @@ public class simpleInterface extends Application {
 
         Scene scene2 = new Scene(bPane, 640, 480);
 
-        profile.setOnAction(e -> {
-            String contactName = contact.getText();
-            for (Person person : accountList) {
-                if (person.getUsername().equals(contactName) && person instanceof Student) {
-                    Label nameLabel = new Label("Username: " + person.getUsername());
-                    Label emailLabel = new Label("Email: " + person.getUserEmail());
-                    Label roleLabel = new Label("Role: " + person.getUserRole());
-
-                    // If it's a student, cast and show additional fields
-                    VBox profileBox = new VBox(10, nameLabel, emailLabel, roleLabel);
-                    if (person instanceof Student) {
-                        Student student = (Student) person;
-                        Label matricLabel = new Label("Matric No: " + student.getMatricNumber());
-                        Label majorLabel = new Label("Major: " + student.getMajorCourse());
-                        Label yearLabel = new Label("Academic Year: " + student.getAcademicYear());
-                        profileBox.getChildren().addAll(matricLabel, majorLabel, yearLabel);
-                    }
-
-                    Button backButton = new Button("Back");
-                    backButton.setOnAction(f -> primaryStage.setScene(scene2)); // go back to main chat
-
-                    profileBox.getChildren().add(backButton);
-                    profileBox.setPadding(new Insets(20));
-                    profileBox.setAlignment(Pos.CENTER);
-
-                    Scene profileScene = new Scene(profileBox, 400, 300);
-                    primaryStage.setScene(profileScene);
-                }
-            }
-        });
+        profile.setOnAction(e -> showProfileScene(primaryStage, accountList, contact, scene2));
 
         login.setOnAction(e -> {
             for (int i = 0; i < accountList.length; i++) {
@@ -183,6 +154,37 @@ public class simpleInterface extends Application {
         primaryStage.setScene(scene1);
         primaryStage.setTitle("Student Messaging System for i-Ta'leem");
         primaryStage.show();
+    }
+
+    private void showProfileScene(Stage primaryStage, Person[] accountList, Label contact, Scene scene2) {
+        String contactName = contact.getText();
+        for (Person person : accountList) {
+            if (person.getUsername().equals(contactName) && person instanceof Student) {
+                Label nameLabel = new Label("Username: " + person.getUsername());
+                Label emailLabel = new Label("Email: " + person.getUserEmail());
+                Label roleLabel = new Label("Role: " + person.getUserRole());
+
+                // If it's a student, cast and show additional fields
+                VBox profileBox = new VBox(10, nameLabel, emailLabel, roleLabel);
+                if (person instanceof Student) {
+                    Student student = (Student) person;
+                    Label matricLabel = new Label("Matric No: " + student.getMatricNumber());
+                    Label majorLabel = new Label("Major: " + student.getMajorCourse());
+                    Label yearLabel = new Label("Academic Year: " + student.getAcademicYear());
+                    profileBox.getChildren().addAll(matricLabel, majorLabel, yearLabel);
+                }
+
+                Button backButton = new Button("Back");
+                backButton.setOnAction(f -> primaryStage.setScene(scene2)); // go back to main chat
+
+                profileBox.getChildren().add(backButton);
+                profileBox.setPadding(new Insets(20));
+                profileBox.setAlignment(Pos.CENTER);
+
+                Scene profileScene = new Scene(profileBox, 400, 300);
+                primaryStage.setScene(profileScene);
+            }
+        }
     }
 
     public static void main(String[] args) {
