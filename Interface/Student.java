@@ -19,10 +19,24 @@ public class Student extends Person {
     @Override
     Chat openChat(Person target) {
         Chat chat = null;
+        if (target.getChats().isEmpty()) {
+            chat = new Chat();
+            chat.addParticipant(this);
+            chat.addParticipant(target);
+            this.chats.add(chat);
+            target.chats.add(chat);
+            System.out.println("Chat not found, but chat added!");
+        }
         for (Chat chats : target.getChats()) {
             if (chats.hasParticipants(this, target)) {
                 chat = chats;
                 return chat;
+            }
+            if (!chats.hasParticipants(this, target)) {
+                chat = new Chat();
+                chat.addParticipant(this);
+                chat.addParticipant(target);
+                System.out.println("Chat not found, but chat added!");
             }
         }
         return chat;
