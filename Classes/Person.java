@@ -1,3 +1,5 @@
+package com.myjfx.simplefx;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +11,8 @@ public abstract class Person {
     protected String userRole;
     private boolean active;
     protected List<Chat> chats = new ArrayList<>();
-
+    private Person viewingContact;
     private static int objectnum = 0;
-
 
     Person() {
         objectnum++;
@@ -27,12 +28,11 @@ public abstract class Person {
         objectnum++;
     }
 
-    abstract void sendMessage(Person recipient, String content);
-    abstract void viewMessage();
-    abstract void viewChats();
-    abstract void openChat(String chatName);
+    abstract Chat sendMessage(Person recipient, String content);
+    abstract Chat openChat(Person target);
     abstract void viewProfile();
     abstract void reportUser(int userId);
+    abstract List<Chat> getChats();
 
     public int getUserId() {
         return userId;
@@ -77,5 +77,9 @@ public abstract class Person {
     public static int getNumberOfObjects() {
         return objectnum;
     }
+
+    public Person getViewingContact() { return viewingContact; }
+
+    public void setViewingContact(Person viewingContact) { this.viewingContact = viewingContact; }
 }
 

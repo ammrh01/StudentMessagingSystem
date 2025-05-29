@@ -1,58 +1,62 @@
-public class Admin {
+package com.myjfx.simplefx;
+
+import java.util.List;
+import java.util.ArrayList;
+
+public class Admin extends Person {
     private int adminId;
     private String username;
     private String passwordHash;
     private String email;
-    
+
+    private ArrayList<Person> accounts = new ArrayList<>();
+
     public Admin(){
-        
-    }
 
+    }
     public Admin(int adminId, String username, String passwordHash, String email) {
-        this.adminId = adminId;
-        this.username = username;
+        super(username, true, email, adminId, "Admin");
         this.passwordHash = passwordHash;
-        this.email = email;
     }
 
-    public int getAdminId() {
-        return adminId;
+    public void addAccount(String username, String email, int matricNo, int academicYear, String kulliyah, String userRole, int userId) {
+        if (userRole.equals("Student")) {
+            accounts.add(new Student(academicYear, kulliyah, matricNo, username, true, email, userId, userRole));
+        }
     }
 
-    public String getUsername() {
-        return username;
+    public ArrayList<Person> getAccounts() {
+        return accounts;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+
+    @Override
+    public Chat sendMessage(Person recipient, String content) {
+        System.out.println("Admin does not send messages.");
+        return null;
     }
 
-    public String getEmail() {
-        return email;
+    @Override
+    Chat openChat(Person target) {
+        return null;
     }
-    
-    public void manageAccounts(){
-        System.out.println("\n--- Manage Accounts ---");
-        System.out.println("\n1.Delete account\n2.Add account\n......");
-                
+
+    @Override
+    public void viewProfile(){
+        System.out.println("Admin Profile:");
+        System.out.println("Username: " + getUsername());
+        System.out.println("Email: " + getUserEmail());
+        System.out.println("Role: " + getUserRole());
     }
-    
-    public void manageMessages(){
-        System.out.println("\n--- Manage Messages ---");
-        System.out.println("\n1.Delete message\n2.Search message\n......");
-                
+
+    @Override
+    public void reportUser(int userId) {
+        System.out.println("Admin cannot report users.");
     }
-    
-    public void sendAnnouncement(){
-        System.out.println("\n---Send Announcement ---");
-        System.out.println("\n1.Broadcast message\n2.Send to all students\n......");
-                
+
+    @Override
+    public List<Chat> getChats() {
+        return chats;
     }
-    
-    public void viewReports(){
-        System.out.println("\n---View Reports ---");
-        System.out.println("\n1.View submitted reports\n2.Search reports by category(abuse,...)\n......");
-                
-    }
-    
+
 }

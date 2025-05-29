@@ -1,16 +1,16 @@
+package com.myjfx.simplefx;
+
 import java.util.Date;
 
 public class Message {
-    private int messageId;
-    private int senderId;
+    private Person sender;
     private String content;
     private Date timestamp;
     private boolean isRead;
 
     // Constructor
     public Message(Person sender, String content) {
-        this.messageId = messageId;
-        this.senderId = senderId;
+        this.sender = sender;
         this.content = content;
         this.timestamp = new Date(); // Auto-set to current time
         this.isRead = false; // Default to unread
@@ -21,8 +21,8 @@ public class Message {
         return content;
     }
 
-    public int getSender() {
-        return senderId;
+    public Person getSender() {
+        return sender;
     }
 
     public boolean isRead() {
@@ -33,21 +33,18 @@ public class Message {
         return timestamp;
     }
 
-    public int getMessageId() {
-        return messageId;
-    }
-
     // Methods
     public void markAsRead() {
         this.isRead = true;
     }
 
-    @Override
+    /*@Override
     public String toString() {
-        return "Message [ID=" + messageId + 
+        return "Message [ID=" + messageId +
                ", Sender=" + senderId + 
                ", Content='" + content + '\'' + 
                ", Time=" + timestamp + 
                ", " + (isRead ? "Read" : "Unread") + "]";
     }
+     */
 }

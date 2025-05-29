@@ -1,3 +1,6 @@
+package com.myjfx.simplefx;
+
+import java.util.List;
 
 public class Student extends Person {
     private int matricNumber;
@@ -14,12 +17,29 @@ public class Student extends Person {
     }
 
     @Override
-    void openChat(String chatName) {
-        for (Chat c : chats) {
-            if (c.getChatName().equals(chatName)) {
-                System.out.printf("\nChat with %s opened.", c.getChatName());
+    Chat openChat(Person target) {
+        Chat chat = null;
+        if (target.getChats().isEmpty()) {
+            chat = new Chat();
+            chat.addParticipant(this);
+            chat.addParticipant(target);
+            this.chats.add(chat);
+            target.chats.add(chat);
+            System.out.println("Chat not found, but chat added!");
+        }
+        for (Chat chats : target.getChats()) {
+            if (chats.hasParticipants(this, target)) {
+                chat = chats;
+                return chat;
+            }
+            if (!chats.hasParticipants(this, target)) {
+                chat = new Chat();
+                chat.addParticipant(this);
+                chat.addParticipant(target);
+                System.out.println("Chat not found, but chat added!");
             }
         }
+        return chat;
 
     }
 
@@ -29,11 +49,11 @@ public class Student extends Person {
     }
 
     @Override
-    void sendMessage(Person recipient, String content) {
-             Chat chat  = null;
+    Chat sendMessage(Person recipient, String content) {
+            Chat chat  = null;
 
             for (Chat c : chats) {
-              if (c.getParticipant(recipient)) {
+              if (c.hasParticipants(this, recipient)) {
                 chat = c;
                 break;
               }
@@ -42,7 +62,7 @@ public class Student extends Person {
             if (chat == null) {
                 System.out.println("Chat not found. Creating new chat....");
                 // Create a new chat
-                chat = new Chat(recipient.getUsername());
+                chat = new Chat();
                 chat.addParticipant(this);
                 chat.addParticipant(recipient);
                 chats.add(chat);
@@ -53,23 +73,8 @@ public class Student extends Person {
               chat.addMessage(message);
 
               System.out.println("Message sent to " + recipient.getUsername() + ": " + content);
-    }
 
-    @Override
-    public void viewChats() {
-        System.out.println("---Chats---");
-        for (Chat c : chats) {
-            if (c.getParticipant(this)) {
-                System.out.println(c.getChatName());
-            }
-        }
-        System.out.println("-----------");
-        
-    }
-
-    @Override
-    void viewMessage() {
-
+              return chat;
     }
 
     @Override
@@ -101,6 +106,8 @@ public class Student extends Person {
         
     }
     
-    
+    public List<Chat> getChats() {
+        return chats;
+    }
     
 }

@@ -1,3 +1,5 @@
+package com.myjfx.simplefx;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,31 +9,28 @@ public class Chat {
     private String chatName;
     private List<Person> participants = new ArrayList<>();
     private List<Message> messageList = new ArrayList<>();
-     
-        
-    public Chat(){
-    }
 
-    public Chat(String chatName){
+
+    public Chat(){
         java.util.Random random = new java.util.Random();
-        int randomId = random.nextInt(900) + 100; // (0–899) + 100 = 100–999
-        
-        this.chatId=randomId;
-        this.chatName=chatName;
+        this.chatId = random.nextInt(900) + 100; // (0–899) + 100 = 100–999
     }
 
     public void addMessage(Message content){
         messageList.add(content);
     }
 
-    public void getMessages(){
-    
-
+    public List<Message> getMessages(){
+       return messageList;
     }
 
-    public boolean getParticipant(Person p){
-        return participants.contains(p);
+    public boolean hasParticipants(Person s1, Person s2){
+        return (participants.contains(s1) && participants.contains(s2)) ||
+                (participants.contains(s2) && participants.contains(s1));
+    }
 
+    public List<Person> getParticipants() {
+        return participants;
     }
 
     public void addParticipant(Person p){
