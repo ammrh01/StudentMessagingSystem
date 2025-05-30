@@ -1,4 +1,4 @@
-package com.myjfx.simplefx;
+package project;
 
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -7,27 +7,22 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 import javafx.collections.FXCollections;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
-import javafx.scene.paint.Color;
-import java.util.ArrayList;
-import javafx.scene.shape.Rectangle;
-
-public class simpleInterface extends Application {
+public class mainInterface extends Application {
     public void start(Stage primaryStage) throws Exception {
         ArrayList<Person> accountList = new ArrayList<>();
         ArrayList<Chat> chatList = new ArrayList<>();
@@ -62,9 +57,15 @@ public class simpleInterface extends Application {
         Label topTitle = new Label("i-Ta'leem's Student Messaging Service");
         Label[] bottomInfos = new Label[2];
 
-        VBox topLayout = new VBox(10, topTitle);
-        topLayout.setAlignment(Pos.CENTER);
-        topLayout.setPadding(new Insets(10));
+        // Load image from resources folder
+        Image logoImage = new Image("file:IIUM.png");
+
+// Create ImageView to show image
+        ImageView logoView = new ImageView(logoImage);
+
+// Optional: Resize image view
+        logoView.setFitWidth(100);   // width in pixels
+        logoView.setPreserveRatio(true);
 
         bottomInfos[0] = new Label("Powered by Grup OOPS");
         bottomInfos[1] = new Label("Copyright (C) IIUM");
@@ -74,17 +75,17 @@ public class simpleInterface extends Application {
         bottomInfo.setPadding(new Insets(10));
         bottomInfo.getChildren().addAll(bottomInfos);
 
-        VBox loginFields = new VBox(10, new Label("Login"), username, password, login, helper);
+        VBox loginFields = new VBox(10,logoView, new Label("Login"), username, password, login, helper);
         loginFields.setPadding(new Insets(10));
         loginFields.setAlignment(Pos.CENTER);
-        
+
         BorderPane loginPage = new BorderPane();
-        loginPage.setTop(topLayout);
+        loginPage.setTop(topTitle);
         loginPage.setCenter(loginFields);
         loginPage.setBottom(bottomInfo);
 
         Scene loginScene = new Scene(loginPage, 640, 480);
-
+        loginScene.getStylesheets().add(getClass().getResource("Styling.css").toExternalForm());
         // MAIN CHAT INTERFACE SCENE
 
         // CHAT WINDOW (CENTER)
@@ -152,7 +153,7 @@ public class simpleInterface extends Application {
         bPane.setLeft(contactsListWindow);
 
         Scene chatScene = new Scene(bPane, 640, 480);
-
+        chatScene.getStylesheets().add(getClass().getResource("Styling.css").toExternalForm());
         // ADMIN SCENE
 
         // TOP PANE
@@ -204,7 +205,7 @@ public class simpleInterface extends Application {
         commandList[2].setOnAction(announcementHandle::addAnnouncement);
 
         Scene adminScene = new Scene(adminLayout, 640, 480);
-
+        adminScene.getStylesheets().add(getClass().getResource("Styling.css").toExternalForm());
         profile.setOnAction(e -> showProfileScene(primaryStage, accountList, contact, chatScene));
 
         login.setOnAction(e -> {
@@ -239,7 +240,7 @@ public class simpleInterface extends Application {
 
         createGroup.setOnAction(e ->createGroupscene(primaryStage,groupList, chatScene) );
         registerGroup.setOnAction(e -> showGroupRegistrationScene(primaryStage, accountList, chatScene, currentProfile, groupList));
-        
+
         logOut.setOnAction(e -> {
             currentProfile.setText("");
             password.clear();
@@ -273,7 +274,6 @@ public class simpleInterface extends Application {
 
     private void updateContacts(Person currentUser, VBox chatbox, TextField messageField, ScrollPane chatboxWindow, Label contact, Button sendButton, VBox contactsList, ObservableList<Group> groupList, Chat announcementChat) {
         contactsList.getChildren().clear();
-
         Button announcement = new Button("Announcements");
         Controller handleAnnouncement = new Controller(chatbox, chatboxWindow, announcementChat, contact);
         announcement.setOnAction(handleAnnouncement::listAnnouncements);
@@ -336,7 +336,6 @@ public class simpleInterface extends Application {
                 currentProfile.setText(username.getText());
                 primaryStage.setScene(chatScene);
                 username.clear();
-
                 currentUser = users;
                 updateContacts(currentUser, chatbox, messageField, chatboxWindow, contact, sendButton, contactsList, groupList, announcementChat);
                 searchBox.addEventFilter(KeyEvent.ANY, keyEvent -> {
@@ -349,12 +348,12 @@ public class simpleInterface extends Application {
     }
 
     private void adminLogin(String enteredUsername,Label currentProfile, Stage primaryStage, Scene adminScene, TextField username, VBox contactsList, VBox chatbox) {
-            currentProfile.setText(enteredUsername);
-            primaryStage.setScene(adminScene);
-            username.clear();
+        currentProfile.setText(enteredUsername);
+        primaryStage.setScene(adminScene);
+        username.clear();
 
-            contactsList.getChildren().clear();
-            chatbox.getChildren().clear();
+        contactsList.getChildren().clear();
+        chatbox.getChildren().clear();
     }
 
     private void showProfileScene(Stage primaryStage, ArrayList<Person> accountList, Label contact, Scene chatScene) {
@@ -383,6 +382,7 @@ public class simpleInterface extends Application {
                 profileBox.setAlignment(Pos.CENTER);
 
                 Scene profileScene = new Scene(profileBox, 400, 300);
+                profileScene.getStylesheets().add(getClass().getResource("Styling.css").toExternalForm());
                 primaryStage.setScene(profileScene);
             }
         }
@@ -402,7 +402,18 @@ public class simpleInterface extends Application {
         TableColumn<Group, Void> joinCol = new TableColumn<>("Join Group");
         refreshTable(groupTable, groupList);
 
+        // Add controls for creating new groups
+        TextField newGroupName = new TextField();
+        newGroupName.setPromptText("Enter group name");
 
+        Button createGroupBtn = new Button("Create New Group");
+        createGroupBtn.setOnAction(e -> {
+            if (!newGroupName.getText().isEmpty()) {
+                Group newGroup = new Group(newGroupName.getText());
+                groupTable.getItems().add(newGroup);
+                newGroupName.clear();
+            }
+        });
         Person currentUser = null;
         for (Person users : accountList) {
             if (currentProfile.getText().equals(users.getUsername())) {
@@ -449,18 +460,21 @@ public class simpleInterface extends Application {
 
         Button backButton = new Button("Back to Login");
         backButton.setOnAction(e -> {
-                    primaryStage.setScene(chatScene);
-                });
+            primaryStage.setScene(chatScene);
+        });
 
 
         VBox layout = new VBox(10,
                 new Label("Group Registration"),
+                newGroupName,
+                createGroupBtn,
                 groupTable,
                 backButton
         );
         layout.setPadding(new Insets(10));
 
         Scene groupScene = new Scene(layout, 600, 400);
+        groupScene.getStylesheets().add(getClass().getResource("Styling.css").toExternalForm());
         primaryStage.setScene(groupScene);
     }
 
@@ -492,11 +506,9 @@ public class simpleInterface extends Application {
         vb.getChildren().add(output);
         vb.getChildren().add(backButton);
         Scene scene2a= new Scene(vb,500,500);
+        scene2a.getStylesheets().add(getClass().getResource("Styling.css").toExternalForm());
         primaryStage.setScene(scene2a);
         primaryStage.show();
-
-
-
         createbtn.setOnAction(e -> {
             if (!newGroupName.getText().isEmpty()) {
                 Group newGroup = new Group(newGroupName.getText());

@@ -1,19 +1,16 @@
-package com.myjfx.simplefx;
+package project;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.layout.VBox;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.control.Label;
 import javafx.scene.control.Button;
-import java.util.List;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.mindrot.jbcrypt.BCrypt;
@@ -59,7 +56,7 @@ public class Controller {
         this.sendButton = sendButton;
     }
 
-    public Controller(Stage primaryStage, Person receiver,  Scene scene2) {
+    public Controller(Stage primaryStage, Person receiver, Scene scene2) {
         this.primaryStage = primaryStage;
         this.receiver = receiver;
         this.viewProfile = viewProfile;

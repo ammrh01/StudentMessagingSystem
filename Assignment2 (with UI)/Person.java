@@ -1,8 +1,9 @@
-package com.myjfx.simplefx;
+package project;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.mindrot.jbcrypt.BCrypt;
 
 
 public abstract class Person {

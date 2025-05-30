@@ -1,7 +1,7 @@
-package com.myjfx.simplefx;
+package project;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Admin extends Person {
     private int adminId;

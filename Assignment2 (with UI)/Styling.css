@@ -1,0 +1,160 @@
+/* Light Mode Styling.css */
+
+/* General background */
+.root {
+    -fx-background-color: #f9f9f9; /* Light gray/white */
+}
+
+/* Buttons */
+/* General Buttons */
+.button {
+    -fx-background-color: #007A3D;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;         /* Smaller text */
+    -fx-padding: 6px 12px;       /* Less vertical & horizontal padding */
+    -fx-border-radius: 3px;      /* Tighter corners */
+    -fx-background-radius: 3px;
+}
+
+.button:hover {
+    -fx-background-color: #00994d;
+}
+
+/* Contact Buttons */
+.contact-button {
+    -fx-background-color: #007A3D;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;         /* Smaller text */
+    -fx-padding: 6px 12px;       /* Smaller padding */
+    -fx-border-radius: 3px;
+}
+
+.contact-button:hover {
+    -fx-background-color: #00994d;
+}
+
+
+/* Text Fields */
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #333333;
+    -fx-border-color: #007A3D;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* Labels */
+.label {
+    -fx-text-fill: #333333;
+    -fx-font-size: 16px;
+}
+
+/* VBox, HBox */
+.vbox, .hbox {
+    -fx-spacing: 10;
+}
+
+/* Profile Layout */
+.profile-layout {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-border-radius: 10px;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 1px;
+}
+
+/* Search Field */
+.search-field {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #333333;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+}
+
+
+
+
+
+
+/* ScrollPane */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+/* Chat Window */
+#chatboxWindow, #chatboxWindow .viewport {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #cccccc;
+}
+
+/* Chatbox container */
+#chatbox {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+    -fx-spacing: 8px;
+}
+
+/* Message bubble */
+.message-bubble {
+    -fx-background-color: #eeeeee;
+    -fx-background-radius: 15px;
+    -fx-padding: 10px;
+    -fx-border-radius: 15px;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 1px;
+    -fx-text-fill: #000000;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+    -fx-max-width: 300px;
+}
+
+/* My messages */
+.my-message {
+    -fx-background-color: #cce5ff;
+    -fx-border-color: #99ccff;
+}
+
+/* Their messages */
+.their-message {
+    -fx-background-color: #eeeeee;
+    -fx-border-color: #dddddd;
+}
+
+/* Sender Name */
+.sender-name {
+    -fx-font-weight: bold;
+    -fx-font-size: 0.9em;
+    -fx-text-fill: #666666;
+    -fx-padding: 0 0 3px 5px;
+}
+
+/* Time */
+.message-time {
+    -fx-font-size: 0.7em;
+    -fx-text-fill: #999999;
+    -fx-padding: 3px 0 0 5px;
+}
+
+/* Login Pane */
+#loginPane {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #e6f4ea);
+    -fx-padding: 40px;
+    -fx-alignment: center;
+}
+
+/* App Title */
+#appTitle {
+    -fx-text-fill: #007A3D;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 20px 0;
+}
+
+/* Login Fields */
+.login-field {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-text-fill: #333333;
+    -fx-font-size: 16px;
+    -fx-prompt-text-fill: #777777;
+    -fx-background-radius: 5px;
+}

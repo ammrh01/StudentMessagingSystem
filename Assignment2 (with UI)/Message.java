@@ -1,4 +1,4 @@
-package com.myjfx.simplefx;
+package project;
 
 import java.util.Date;
 
