@@ -29,6 +29,7 @@ public abstract class Person {
     }
 
     abstract Chat sendMessage(Person recipient, String content);
+    abstract void sendMessage(Group groupChat, Person sender, String content);
     abstract Chat openChat(Person target);
     abstract void viewProfile();
     abstract void reportUser(int userId);

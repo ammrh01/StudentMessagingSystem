@@ -37,6 +37,11 @@ public class Admin extends Person {
     }
 
     @Override
+    public void sendMessage(Group groupChat, Person sender, String content) {
+        System.out.println("Admin does not send messages.");
+    }
+
+    @Override
     Chat openChat(Person target) {
         return null;
     }

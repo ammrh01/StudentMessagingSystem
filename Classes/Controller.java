@@ -1,5 +1,6 @@
 package com.myjfx.simplefx;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,6 +29,7 @@ public class Controller {
     private Stage primaryStage;
     private StackPane viewProfile;
     private Scene scene2;
+    private Group group;
 
     public Controller() {
 
@@ -40,6 +42,16 @@ public class Controller {
         this.currentChat = currentChat;
         this.sender = sender;
         this.receiver = receiver;
+        this.contactLabel = contactLabel;
+        this.sendButton = sendButton;
+    }
+
+    public Controller(VBox chatBox, TextField inputField, ScrollPane chatboxWindow, Group groupList, Person sender, Label contactLabel, Button sendButton) {
+        this.chatBox = chatBox;
+        this.inputField = inputField;
+        this.scrollPane = chatboxWindow;
+        this.group = groupList;
+        this.sender = sender;
         this.contactLabel = contactLabel;
         this.sendButton = sendButton;
     }
@@ -97,7 +109,25 @@ public class Controller {
         for (Message message : currentChat.getMessages()) {
             createChat(message.getSender().getUsername(), message.getContent());
         }
-
+    }
+    public void openGroupChat(ActionEvent event) {
+        System.out.println("Group chat opened!");
+        chatBox.getChildren().clear();
+        contactLabel.setText(group.getGroupName());
+        if (!group.getMessages().isEmpty()) {
+            for (Message message : group.getMessages()) {
+                createChat(message.getSender().getUsername(), message.getContent());
+            }
+        }
 
     }
+
+    public void sendGroupMessage(ActionEvent event) {
+            if (!(contactLabel.getText().isEmpty())) {
+                if (!(inputField.getText().isEmpty())) {
+                    sender.sendMessage(group, sender, inputField.getText());
+                    createChat(sender.getUsername(), inputField.getText());
+                }
+            }
+        }
 }

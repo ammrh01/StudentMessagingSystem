@@ -49,6 +49,12 @@ public class Student extends Person {
     }
 
     @Override
+    void sendMessage(Group groupChat, Person sender, String content) {
+        Message message = new Message(this, content);
+        groupChat.addMessage(message);
+    }
+
+    @Override
     Chat sendMessage(Person recipient, String content) {
             Chat chat  = null;
 

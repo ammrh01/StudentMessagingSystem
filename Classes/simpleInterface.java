@@ -40,7 +40,6 @@ public class simpleInterface extends Application {
 
         ObservableList<Group> groupList = FXCollections.observableArrayList();
 
-
         accountList.add(adminUser);
 
         adminUser.addAccount("Bob", "bob@gmail.com", 240000, 1, "KICT", "Student", 001);
@@ -147,7 +146,7 @@ public class simpleInterface extends Application {
             for (Person users : accountList) {
                 if (users instanceof Student || users instanceof Lecturer) {
                         if (username.getText().equals(users.getUsername())) {
-                            loginUser(accountList, username, currentProfile, primaryStage, scene2, chatbox, messageField, chatboxWindow, contact, sendButton, contactsList, searchBox, searchList);
+                            loginUser(accountList, username, currentProfile, primaryStage, scene2, chatbox, messageField, chatboxWindow, contact, sendButton, contactsList, searchBox, searchList, groupList);
                         }
                 } else if (users instanceof Admin) {
                     Admin admin1 = (Admin) users;
@@ -161,7 +160,8 @@ public class simpleInterface extends Application {
 
         });
 
-        registerGroup.setOnAction(e -> showGroupRegistrationScene(primaryStage, accountList, scene2, currentProfile, registerGroup, loginpage, groupList));
+
+        registerGroup.setOnAction(e -> showGroupRegistrationScene(primaryStage, accountList, scene2, currentProfile, groupList));
         
         logOut.setOnAction(e -> {
             currentProfile.setText("");
@@ -170,6 +170,8 @@ public class simpleInterface extends Application {
             contactsList.getChildren().clear();
             sendButton.setOnAction(null);
             bPane.setCenter(chatLayout);
+            searchBox.clear();
+            searchList.getChildren().clear();
         });
 
         primaryStage.setScene(scene1);
@@ -177,16 +179,34 @@ public class simpleInterface extends Application {
         primaryStage.show();
     }
 
-    private void updateContacts(Person currentUser, VBox chatbox, TextField messageField, ScrollPane chatboxWindow, Label contact, Button sendButton, VBox contactsList) {
+    private void updateContacts(Person currentUser, VBox chatbox, TextField messageField, ScrollPane chatboxWindow, Label contact, Button sendButton, VBox contactsList, ObservableList<Group> groupList) {
         contactsList.getChildren().clear();
+
+        Group currentGroup = null;
+        for (Group groups : groupList) {
+            if (groups.getMembers().contains(currentUser)) {
+                currentGroup = groups;
+                Button buttonGroup = new Button(groups.getGroupName());
+                Controller handleMessage = new Controller(chatbox, messageField, chatboxWindow, currentGroup, currentUser, contact, sendButton);
+                buttonGroup.setOnAction(e -> {
+                    handleMessage.openGroupChat(e);
+                    sendButton.setOnAction(handleMessage::sendGroupMessage);
+                });
+                contactsList.getChildren().add(buttonGroup);
+            }
+        }
+
+
         for (Chat chat : currentUser.getChats()) {
             for (Person receivers : chat.getParticipants()) {
                 if (!(receivers.getUsername().equals(currentUser.getUsername()))) {
                     System.out.println(receivers.getUsername());
                     Button buttonContact = new Button(receivers.getUsername());
                     Controller handleMessage = new Controller(chatbox, messageField, chatboxWindow, chat, currentUser, receivers, contact, sendButton);
-                    buttonContact.setOnAction(handleMessage::openChat);
-                    sendButton.setOnAction(handleMessage::handleSend);
+                    buttonContact.setOnAction(e -> {
+                        handleMessage.openChat(e);
+                        sendButton.setOnAction(handleMessage::handleSend);
+                    });
                     contactsList.getChildren().add(buttonContact);
                 }
             }
@@ -210,7 +230,7 @@ public class simpleInterface extends Application {
         }
     }
 
-    private void loginUser(ArrayList<Person> accountList, TextField username, Label currentProfile, Stage primaryStage, Scene scene2, VBox chatbox, TextField messageField, ScrollPane chatboxWindow, Label contact, Button sendButton, VBox contactsList, TextField searchBox, Pane searchList) {
+    private void loginUser(ArrayList<Person> accountList, TextField username, Label currentProfile, Stage primaryStage, Scene scene2, VBox chatbox, TextField messageField, ScrollPane chatboxWindow, Label contact, Button sendButton, VBox contactsList, TextField searchBox, Pane searchList, ObservableList<Group> groupList) {
         // First check admin user
         for (Person users : accountList) {
             Person currentUser;
@@ -220,7 +240,7 @@ public class simpleInterface extends Application {
                 username.clear();
 
                 currentUser = users;
-                updateContacts(currentUser, chatbox, messageField, chatboxWindow, contact, sendButton, contactsList);
+                updateContacts(currentUser, chatbox, messageField, chatboxWindow, contact, sendButton, contactsList, groupList);
                 searchBox.addEventFilter(KeyEvent.ANY, keyEvent -> {
                     searchContact(searchBox, currentUser, accountList, searchList);
                 });
@@ -365,11 +385,11 @@ public class simpleInterface extends Application {
         }
     }
 
-    private void showGroupRegistrationScene(Stage primaryStage, ArrayList<Person> accountList, Scene scene2, Label currentProfile, Button registerGroup, VBox loginpage, ObservableList<Group> groupList) {
-        // Create table for groups
+    private void showGroupRegistrationScene(Stage primaryStage, ArrayList<Person> accountList, Scene scene2, Label currentProfile, ObservableList<Group> groupList) {
+        // Create table
         TableView<Group> groupTable = new TableView<>();
 
-        // Create columns
+        // Create columns for table
         TableColumn<Group, String> groupNameCol = new TableColumn<>("Group Name");
         groupNameCol.setCellValueFactory(new PropertyValueFactory<>("groupName"));
 
@@ -377,15 +397,25 @@ public class simpleInterface extends Application {
         membersCol.setCellValueFactory(new PropertyValueFactory<>("membersList"));
 
         TableColumn<Group, Void> joinCol = new TableColumn<>("Join Group");
+        refreshTable(groupTable, groupList);
+
+        // Add controls for creating new groups
+        TextField newGroupName = new TextField();
+        newGroupName.setPromptText("Enter group name");
+
+        Button createGroupBtn = new Button("Create New Group");
+        createGroupBtn.setOnAction(e -> {
+            if (!newGroupName.getText().isEmpty()) {
+                Group newGroup = new Group(newGroupName.getText());
+                groupTable.getItems().add(newGroup);
+                newGroupName.clear();
+            }
+        });
 
         Person currentUser = null;
-
         for (Person users : accountList) {
-
             if (currentProfile.getText().equals(users.getUsername())) {
                 currentUser = users;
-
-                System.out.println("Username found! " + currentUser);
             }
         }
 
@@ -396,7 +426,6 @@ public class simpleInterface extends Application {
             public TableCell<Group, Void> call(final TableColumn<Group, Void> param) {
                 return new TableCell<Group, Void>() {
                     private final Button joinButton = new Button("Join");
-
                     {
                         joinButton.setOnAction((ActionEvent event) -> {
                             Group group = getTableView().getItems().get(getIndex());
@@ -404,11 +433,14 @@ public class simpleInterface extends Application {
                             if (!group.getMembers().contains(finalCurrentUser)) {
                                 group.addMember(finalCurrentUser);
                                 System.out.println("Member added! Name: " + finalCurrentUser.getUsername());
-                                refreshTable(groupTable, groupList);
+                                System.out.println("Group: " + group.getGroupName());
+                                for (Person members : group.getMembers()) {
+                                    System.out.println(members.getUsername());
+                                }
                             }
+                            refreshTable(groupTable, groupList);
                         });
                     }
-
                     @Override
                     public void updateItem(Void item, boolean empty) {
                         super.updateItem(item, empty);
@@ -424,21 +456,11 @@ public class simpleInterface extends Application {
 
         groupTable.getColumns().addAll(groupNameCol, membersCol, joinCol);
 
-        // Add controls for creating new groups
-        TextField newGroupName = new TextField();
-        newGroupName.setPromptText("Enter group name");
-
-        Button createGroupBtn = new Button("Create New Group");
-        createGroupBtn.setOnAction(e -> {
-            if (!newGroupName.getText().isEmpty()) {
-                Group newGroup = new Group(newGroupName.getText());
-                groupTable.getItems().add(newGroup);
-                newGroupName.clear();
-            }
-        });
-
         Button backButton = new Button("Back to Login");
-        backButton.setOnAction(e -> primaryStage.setScene(scene2));
+        backButton.setOnAction(e -> {
+                    primaryStage.setScene(scene2);
+                });
+
 
         VBox layout = new VBox(10,
                 new Label("Group Registration"),
