@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.ScrollPane;
@@ -15,13 +16,14 @@ import javafx.scene.control.Button;
 import java.util.List;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class Controller {
 
     private VBox chatBox;
     private TextField inputField;
     private ScrollPane scrollPane;
-    private Chat currentChat = null;
+    private Message message;
     private Label contactLabel;
     private Button sendButton;
     private Person sender;
@@ -30,6 +32,8 @@ public class Controller {
     private StackPane viewProfile;
     private Scene scene2;
     private Group group;
+    private Chat announcement;
+    private String password;
 
     public Controller() {
 
@@ -39,7 +43,6 @@ public class Controller {
         this.chatBox = chatBox;
         this.inputField = inputField;
         this.scrollPane = chatboxWindow;
-        this.currentChat = currentChat;
         this.sender = sender;
         this.receiver = receiver;
         this.contactLabel = contactLabel;
@@ -61,15 +64,38 @@ public class Controller {
         this.receiver = receiver;
         this.viewProfile = viewProfile;
         this.scene2 = scene2;
-
     }
 
-    public void createChat(String user, String content) {
-        String message = user + "\n" + content;
+    public Controller(String pass, Person currentUser) {
+        this.password = pass;
+        this.sender = currentUser;
+    }
+
+    public Controller(VBox chatBox, ScrollPane chatboxWindow, Chat announcement, Label contactLabel) {
+        this.chatBox = chatBox;
+        this.scrollPane = chatboxWindow;
+        this.announcement = announcement;
+        this.contactLabel = contactLabel;
+    }
+
+    public void createChat(Message messageInfo) {
+        Person user = messageInfo.getSender();
+        String content = messageInfo.getContent();
+        String message = user.getUsername() + "\n" + content;
                 Label chatMessage = new Label(message);
                 chatMessage.setWrapText(true);
 
-                VBox chatWindow = new VBox(chatMessage);
+                Label report = new Label("Report");
+                report.setVisible(false);
+                report.setTextFill(Color.RED);
+
+                report.setStyle("-fx-font-size: 5px;");
+
+                report.setOnMouseClicked(event -> {
+                    sender.reportMessage(messageInfo);
+                });
+
+                VBox chatWindow = new VBox(chatMessage, report);
                 chatWindow.setPadding(new Insets(5));
 
                 if (user.equals(this.sender.getUsername())) {
@@ -79,6 +105,14 @@ public class Controller {
                     chatWindow.setAlignment(Pos.TOP_LEFT);
                     chatMessage.setTextAlignment(TextAlignment.LEFT);
                 }
+
+                chatWindow.setOnMouseEntered(event -> {
+                    report.setVisible(true);
+                });
+
+                chatWindow.setOnMouseExited(event -> {
+                    report.setVisible(false);
+                });
 
                 // Scroll to the bottom
                 scrollPane.layout();
@@ -93,8 +127,8 @@ public class Controller {
 
         if (!(contactLabel.getText().isEmpty())) {
             if (!(inputField.getText().isEmpty())) {
-                currentChat = sender.sendMessage(receiver, inputField.getText());
-                createChat(sender.getUsername(), inputField.getText());
+                message = sender.sendMessage(receiver, inputField.getText());
+                createChat(message);
             }
         }
     }
@@ -107,7 +141,7 @@ public class Controller {
         sender.setViewingContact(receiver);
 
         for (Message message : currentChat.getMessages()) {
-            createChat(message.getSender().getUsername(), message.getContent());
+            createChat(message);
         }
     }
     public void openGroupChat(ActionEvent event) {
@@ -116,7 +150,7 @@ public class Controller {
         contactLabel.setText(group.getGroupName());
         if (!group.getMessages().isEmpty()) {
             for (Message message : group.getMessages()) {
-                createChat(message.getSender().getUsername(), message.getContent());
+                createChat(message);
             }
         }
 
@@ -125,9 +159,34 @@ public class Controller {
     public void sendGroupMessage(ActionEvent event) {
             if (!(contactLabel.getText().isEmpty())) {
                 if (!(inputField.getText().isEmpty())) {
-                    sender.sendMessage(group, sender, inputField.getText());
-                    createChat(sender.getUsername(), inputField.getText());
+                    message = sender.sendMessage(group, sender, inputField.getText());
+                    createChat(message);
                 }
             }
+    }
+
+    public boolean checkPassword() {
+        boolean isMatch = BCrypt.checkpw(password, sender.getPassword());
+        return isMatch;
+    }
+
+    public void listAnnouncements(ActionEvent event) {
+        contactLabel.setText("Announcements");
+
+        for (Message message : announcement.getMessages()) {
+            Label chatMessage = new Label(message.getContent());
+            chatMessage.setWrapText(true);
+
+            VBox chatWindow = new VBox(chatMessage);
+            chatWindow.setPadding(new Insets(5));
+            chatWindow.setAlignment(Pos.TOP_LEFT);
+            chatMessage.setTextAlignment(TextAlignment.LEFT);
+
+            // Scroll to the bottom
+            scrollPane.layout();
+            scrollPane.setVvalue(1.0);
+
+            chatBox.getChildren().add(chatWindow);
         }
+    }
 }

@@ -44,18 +44,21 @@ public class Student extends Person {
     }
 
     @Override
-    void reportUser(int userId) {
-        
+    void reportMessage(Message message) {
+        System.out.println("Message reported. Details: ");
+        System.out.println(message.toString());
+        this.getMessageReports().add(message);
     }
 
     @Override
-    void sendMessage(Group groupChat, Person sender, String content) {
+    Message sendMessage(Group groupChat, Person sender, String content) {
         Message message = new Message(this, content);
         groupChat.addMessage(message);
+        return message;
     }
 
     @Override
-    Chat sendMessage(Person recipient, String content) {
+    Message sendMessage(Person recipient, String content) {
             Chat chat  = null;
 
             for (Chat c : chats) {
@@ -80,16 +83,7 @@ public class Student extends Person {
 
               System.out.println("Message sent to " + recipient.getUsername() + ": " + content);
 
-              return chat;
-    }
-
-    @Override
-    void viewProfile() {
-        System.out.println("Name: " + this.getUsername());
-        System.out.println("Role: " + this.getUserRole());
-        System.out.println("Matric number: " + this.getMatricNumber());
-        System.out.println("Faculty: " + this.getMajorCourse());
-        System.out.println("Year: " + this.getAcademicYear());
+              return message;
     }
 
     public int getMatricNumber() {
@@ -102,14 +96,6 @@ public class Student extends Person {
 
     public int getAcademicYear() {
         return academicYear;
-    }
-
-    public void joinChatroom(int chatroomId) {
-
-    }
-
-    public void leaveChatroom(int chatroomId) {
-        
     }
     
     public List<Chat> getChats() {

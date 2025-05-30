@@ -2,16 +2,22 @@ package com.myjfx.simplefx;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.mindrot.jbcrypt.BCrypt;
+
 
 public abstract class Person {
 
     private int userId;
     private String Username;
+    private String password;
     private String userEmail;
     protected String userRole;
     private boolean active;
     protected List<Chat> chats = new ArrayList<>();
+    protected List<Message> messageReports = new ArrayList<>();
     private Person viewingContact;
+
+
     private static int objectnum = 0;
 
     Person() {
@@ -28,11 +34,10 @@ public abstract class Person {
         objectnum++;
     }
 
-    abstract Chat sendMessage(Person recipient, String content);
-    abstract void sendMessage(Group groupChat, Person sender, String content);
+    abstract Message sendMessage(Person recipient, String content);
+    abstract Message sendMessage(Group groupChat, Person sender, String content);
     abstract Chat openChat(Person target);
-    abstract void viewProfile();
-    abstract void reportUser(int userId);
+    abstract void reportMessage(Message message);
     abstract List<Chat> getChats();
 
     public int getUserId() {
@@ -82,5 +87,28 @@ public abstract class Person {
     public Person getViewingContact() { return viewingContact; }
 
     public void setViewingContact(Person viewingContact) { this.viewingContact = viewingContact; }
+
+    // Hash the password
+    String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+
+    // Check the password
+    boolean isMatch = BCrypt.checkpw(password, hashed);
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+        this.password = hashed;
+    }
+
+    public List<Message> getMessageReports() {
+        return messageReports;
+    }
+
+    public void setMessageReports(List<Message> messageReports) {
+        this.messageReports = messageReports;
+    }
 }
 

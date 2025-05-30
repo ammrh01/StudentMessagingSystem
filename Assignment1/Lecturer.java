@@ -45,10 +45,7 @@ public class Lecturer extends Person {
             }
         }
         return chat;
-    }
 
-    @Override
-    void sendMessage(Group groupChat, Person sender, String content) {
     }
 
     @Override
