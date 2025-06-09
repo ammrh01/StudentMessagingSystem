@@ -104,6 +104,10 @@ public class Lecturer extends Person {
         return chats;
     }
 
+    public Group createGroup(String groupName) {
+        Group newGroup = new Group(groupName);
+        return newGroup;
+    }
 
 
 

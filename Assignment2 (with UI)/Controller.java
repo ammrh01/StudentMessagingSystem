@@ -68,11 +68,12 @@ public class Controller {
         this.sender = currentUser;
     }
 
-    public Controller(VBox chatBox, ScrollPane chatboxWindow, Chat announcement, Label contactLabel) {
+    public Controller(VBox chatBox, ScrollPane chatboxWindow, Chat announcement, Label contactLabel, Person sender) {
         this.chatBox = chatBox;
         this.scrollPane = chatboxWindow;
         this.announcement = announcement;
         this.contactLabel = contactLabel;
+        this.sender = sender;
     }
 
     public void createChat(Message messageInfo) {
@@ -86,7 +87,7 @@ public class Controller {
                 report.setVisible(false);
                 report.setTextFill(Color.RED);
 
-                report.setStyle("-fx-font-size: 5px;");
+                report.setStyle("-fx-font-size: 9px;");
 
                 report.setOnMouseClicked(event -> {
                     sender.reportMessage(messageInfo);

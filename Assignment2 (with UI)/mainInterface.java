@@ -255,7 +255,7 @@ public class mainInterface extends Application {
         }
         });
 
-        createGroup.setOnAction(e -> createGroupscene(primaryStage, groupList, chatScene));
+        createGroup.setOnAction(e -> createGroupscene(primaryStage, groupList, chatScene, currentProfile));
         registerGroup.setOnAction(e -> showGroupRegistrationScene(primaryStage, accountList, chatScene, currentProfile, groupList));
 
         logOut.setOnAction(e -> {
@@ -291,7 +291,7 @@ public class mainInterface extends Application {
     private void updateContacts(Person currentUser, VBox chatbox, TextField messageField, ScrollPane chatboxWindow, Label contact, Button sendButton, VBox contactsList, ObservableList<Group> groupList, Chat announcementChat) {
         contactsList.getChildren().clear();
         Button announcement = new Button("Announcements");
-        Controller handleAnnouncement = new Controller(chatbox, chatboxWindow, announcementChat, contact);
+        Controller handleAnnouncement = new Controller(chatbox, chatboxWindow, announcementChat, contact, currentUser);
         announcement.setOnAction(handleAnnouncement::listAnnouncements);
         contactsList.getChildren().add(announcement);
 
@@ -411,13 +411,13 @@ public class mainInterface extends Application {
                 newGroupName.clear();
             }
         });
-        Person currentUser = null;
+        Student currentUser = null;
         for (Person users : accountList) {
             if (currentProfile.getText().equals(users.getUsername())) {
-                currentUser = users;
+                currentUser = (Student) users;
             }
         }
-        Person finalCurrentUser = currentUser;
+        Student finalCurrentUser = currentUser;
         joinCol.setCellFactory(new Callback<TableColumn<Group, Void>, TableCell<Group, Void>>() {
             @Override
             public TableCell<Group, Void> call(final TableColumn<Group, Void> param) {
@@ -427,7 +427,7 @@ public class mainInterface extends Application {
                         joinButton.setOnAction((ActionEvent event) -> {
                             Group group = getTableView().getItems().get(getIndex());
                             if (!group.getMembers().contains(finalCurrentUser)) {
-                                group.addMember(finalCurrentUser);
+                                finalCurrentUser.joinGroup(group);
                                 System.out.println("Member added! Name: " + finalCurrentUser.getUsername());
                                 System.out.println("Group: " + group.getGroupName());
                                 for (Person members : group.getMembers()) {
@@ -464,7 +464,7 @@ public class mainInterface extends Application {
         groupTable.refresh();
     }
 
-    private void createGroupscene(Stage primaryStage, ObservableList<Group> groupList, Scene scene2) {
+    private void createGroupscene(Stage primaryStage, ObservableList<Group> groupList, Scene scene2, Label currentProfile) {
         primaryStage.setTitle("Create Group");
         Label label1 = new Label("Create Group");
         Label label2 = new Label("Group Count");

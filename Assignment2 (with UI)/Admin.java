@@ -2,14 +2,9 @@ package project;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.io.*;
 
 public class Admin extends Person {
-    private int adminId;
-    private String username;
     private String password;
-
-    private String email;
     private ArrayList<Person> accounts = new ArrayList<>();
 
     public Admin() {
@@ -28,6 +23,10 @@ public class Admin extends Person {
     public void addAccount(String username, String coursesTaught, String departmentName, String officeLocation, String userEmail, int userId, String userRole) {
         Lecturer lecturer = new Lecturer(username, coursesTaught, departmentName, officeLocation, userEmail, userId, userRole, true);
         accounts.add(lecturer);
+    }
+
+    public void makeAnnouncement(Chat announcementChat, String text) {
+        announcementChat.addMessage(new Message(text));
     }
 
     public ArrayList<Person> getAccounts() {

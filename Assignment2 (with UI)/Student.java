@@ -43,6 +43,14 @@ public class Student extends Person {
 
     }
 
+    public void joinGroup(Group group) {
+        group.addMember(this);
+    }
+
+    public void leaveGroup(Group group) {
+        group.removeMember(this);
+    }
+
     @Override
     void reportMessage(Message message) {
         System.out.println("Message reported. Details: ");

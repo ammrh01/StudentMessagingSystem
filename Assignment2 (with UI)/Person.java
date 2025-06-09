@@ -15,6 +15,7 @@ public abstract class Person {
     protected String userRole;
     private boolean active;
     protected List<Chat> chats = new ArrayList<>();
+    protected List<Group> groups = new ArrayList<>();
     protected List<Message> messageReports = new ArrayList<>();
     private Person viewingContact;
 

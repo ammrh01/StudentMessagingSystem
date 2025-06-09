@@ -46,4 +46,10 @@ public class Group {
             members.add(member);
         }
     }
+
+    public void removeMember(Person member) {
+        if (!members.contains(member)) {
+            members.remove(member);
+        }
+    }
 }
