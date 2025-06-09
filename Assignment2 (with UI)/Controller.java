@@ -95,7 +95,7 @@ public class Controller {
                 VBox chatWindow = new VBox(chatMessage, report);
                 chatWindow.setPadding(new Insets(5));
 
-                if (user.equals(this.sender.getUsername())) {
+                if (user.equals(this.sender)) {
                     chatWindow.setAlignment(Pos.TOP_RIGHT);
                     chatMessage.setTextAlignment(TextAlignment.RIGHT);
                 } else {
@@ -168,6 +168,7 @@ public class Controller {
     }
 
     public void listAnnouncements(ActionEvent event) {
+        chatBox.getChildren().clear();
         contactLabel.setText("Announcements");
 
         for (Message message : announcement.getMessages()) {

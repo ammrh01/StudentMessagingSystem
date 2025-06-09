@@ -1,0 +1,5 @@
+ammar_haikal,ammar@gmail.com,2419823,1,KICT,Student,001
+azril_hakimi,azril@gmail.com,2418105,1,KICT,Student,002
+amirul_danial,amirul@gmail.com,2415159,1,KICT,Student,003
+aqil_shahmie,aqil@gmail.com,2416409,1,KICT,Student,004
+dini_oktarina,OOP,IT department,KICT Level 4 Block C,oktarina@gmail.com,241,Lecturer

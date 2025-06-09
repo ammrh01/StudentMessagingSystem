@@ -47,6 +47,7 @@
 .label {
     -fx-text-fill: #333333;
     -fx-font-size: 16px;
+    -fx-font-family: 'serif';
 }
 
 /* VBox, HBox */

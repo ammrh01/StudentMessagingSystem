@@ -2,34 +2,37 @@ package project;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.*;
 
 public class Admin extends Person {
     private int adminId;
     private String username;
-    private String passwordHash;
+    private String password;
+
     private String email;
     private ArrayList<Person> accounts = new ArrayList<>();
 
-    public Admin(){
-
+    public Admin() {
     }
-    public Admin(int adminId, String username, String passwordHash, String email) {
+
+    public Admin(int adminId, String username, String password, String email) {
         super(username, true, email, adminId, "Admin");
-        this.passwordHash = passwordHash;
+        this.password=password;
     }
 
     public void addAccount(String username, String email, int matricNo, int academicYear, String kulliyah, String userRole, int userId) {
-            accounts.add(new Student(academicYear, kulliyah, matricNo, username, true, email, userId, userRole));
+        Student student = new Student(academicYear, kulliyah, matricNo, username, true, email, userId, userRole);
+        accounts.add(student);
     }
 
-    public void addAccount(String coursesTaught, String departmentName, int lecturerId, String officeLocation, String Username, boolean status, String userEmail, int userId, String userRole) {
-        accounts.add(new Lecturer(coursesTaught, departmentName, lecturerId, officeLocation, Username, true, userEmail, userId, userRole));
+    public void addAccount(String username, String coursesTaught, String departmentName, String officeLocation, String userEmail, int userId, String userRole) {
+        Lecturer lecturer = new Lecturer(username, coursesTaught, departmentName, officeLocation, userEmail, userId, userRole, true);
+        accounts.add(lecturer);
     }
 
     public ArrayList<Person> getAccounts() {
         return accounts;
     }
-
 
     @Override
     public Message sendMessage(Person recipient, String content) {
@@ -39,7 +42,7 @@ public class Admin extends Person {
 
     @Override
     public Message sendMessage(Group groupChat, Person sender, String content) {
-        System.out.println("Admin does not send messages.");
+        System.out.println("Admin does not send group messages.");
         return null;
     }
 
@@ -57,5 +60,12 @@ public class Admin extends Person {
     public List<Chat> getChats() {
         return chats;
     }
+    
+    public String getPassword() {
+        return password;
+    }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

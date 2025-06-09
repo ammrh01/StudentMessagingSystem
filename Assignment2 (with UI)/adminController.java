@@ -133,18 +133,17 @@ public class adminController {
         Button addBtn = new Button("Add");
 
         addBtn.setOnAction(e -> {
+            try {
             String selectedRole = user_dropdown.getValue();
             String name = nameField.getText();
             String email = emailField.getText();
 
             if (selectedRole == null) {
-                feedback.setText("Please select a role");
-                return;
+                throw new Exception("Please select a role");
             }
 
             if (name.isEmpty() || email.isEmpty()) {
-                feedback.setText("Name and Email are required");
-                return;
+                throw new Exception("Name and Email are required");
             }
 
             if ("Student".equals(selectedRole)) {
@@ -153,8 +152,7 @@ public class adminController {
                 String currentKulliyah = kulliyah_dropdown.getValue();
 
                 if (matricNo.isEmpty() || academicYear.isEmpty() || currentKulliyah == null) {
-                    feedback.setText("Please fill all student fields");
-                    return;
+                    throw new Exception("Please fill all student fields");
                 }
 
                 // Call student add method
@@ -171,24 +169,25 @@ public class adminController {
 
                 if (lecturerId.isEmpty() || departmentName.isEmpty() || coursesTaught.isEmpty() ||
                         officeLocation.isEmpty() || username.isEmpty()) {
-                    feedback.setText("Please fill all lecturer fields");
-                    return;
+                    throw new Exception("Please fill all lecturer fields");
                 }
 
                 // Call lecturer add method
                 adminUser.addAccount(
+                        username,
                         coursesTaught,
                         departmentName,
-                        Integer.parseInt(lecturerId),
                         officeLocation,
-                        username,
-                        true, // status
                         email,
                         accountList.size()+1, // userId
                         selectedRole
                 );
                 feedback.setText("Lecturer added successfully!");
             }
+        } catch (Exception accAdd) {
+            feedback.setText(accAdd.getMessage());
+
+        }
 
             // Clear fields after adding
             nameField.clear();
@@ -229,6 +228,7 @@ public class adminController {
 
         // Delete function
         deleteBtn.setOnAction(e -> {
+            try {
             String uname = deleteField.getText();
 
             boolean deleted = false;
@@ -242,7 +242,10 @@ public class adminController {
             }
 
             if (!deleted) {
-                feedback.setText("Not found");
+                throw new Exception("Error: Account not found");
+            }
+            } catch (Exception accRem) {
+                feedback.setText(accRem.getMessage());
             }
         });
 
@@ -266,10 +269,16 @@ public class adminController {
         manageLayout.setPadding(new Insets(10));
 
         submitAnnouncement.setOnAction(e -> {
+            try {
             if (announcementArea.getText().isEmpty()) {
-                output.setText("Error. Must enter an announcement in text area");
+                throw new Exception("Error. Must enter an announcement in text area");
             } else {
+                output.setText("Announcement successfully added!");
                 announcementChat.addMessage(new Message(announcementArea.getText()));
+            }
+            } catch (Exception annc) {
+                output.setText(annc.getMessage());
+                System.out.println(annc.getMessage());
             }
         });
 

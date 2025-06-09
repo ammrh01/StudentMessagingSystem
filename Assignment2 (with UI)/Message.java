@@ -39,6 +39,10 @@ public class Message {
         return timestamp;
     }
 
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
     // Methods
     public void markAsRead() {
         this.isRead = true;

@@ -3,7 +3,6 @@ package project;
 import java.util.List;
 
 public class Lecturer extends Person {
-    private int lecturerId;
     private String departmentName;
     private String coursesTaught;
     private String officeLocation;
@@ -11,16 +10,11 @@ public class Lecturer extends Person {
     public Lecturer() {
     }
 
-    public Lecturer(String coursesTaught, String departmentName, int lecturerId, String officeLocation, String Username, boolean status, String userEmail, int userId, String userRole) {
+    public Lecturer(String Username, String coursesTaught, String departmentName, String officeLocation, String userEmail, int userId, String userRole, boolean status) {
         super(Username, status, userEmail, userId, userRole);
         this.coursesTaught = coursesTaught;
         this.departmentName = departmentName;
-        this.lecturerId = lecturerId;
         this.officeLocation = officeLocation;
-    }
-
-    public int getLecturerId() {
-        return lecturerId;
     }
 
     public String getDepartmentName() {
